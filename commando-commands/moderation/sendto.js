@@ -11,25 +11,29 @@ module.exports = class SayInCommand extends Command {
       aliases: ['echoto'],
       group: 'moderation',
       memberName: 'sendto',
-      description: 'Sends the message to the specified channel.',
+      description: 'Sends the message to the specified member.',
       clientPermissions: ['ADMINISTRATOR'],
 	    userPermissions: ['MANAGE_MESSAGES'],
-      args: [
-		{
-			key: 'say',
-            prompt: 'What do you want the bot/client to say?',
-            type: 'string'
-        },
-        {
-            key: 'channel',
-            prompt: 'What channel do you want to send that to?',
-            type: 'channel'
-        }
-	],
     });
   }
-  async run(message, { say, channel }) {
-    message.delete()
-    channel.send(say);
+  async run(message) {
+    const errembed = new MessageEmbed()
+            .setTitle(`${process.env.OS_NAME} | ERROR!`)
+            .setColor(`#${process.env.EMB_COLOR}`)
+            .setThumbnail(this.client.user.displayAvatarURL())
+            .setDescription(`Looks like you've recieved a error! Here are some possible reasons this might happen!`)
+            .setFooter(this.client.user.username, this.client.user.displayAvatarURL())
+            .setAuthor(`${message.guild.name} | ${message.guild.id}`, message.guild.iconURL())
+            .addField('Missing Argument', `A \`Missing Argument\` is the cause of a missing user input. If you need help with something user ${this.client.commandPrefix}help or @${this.client.user.tag} help!`)
+            .addField('Missing Permissions', `A \`Missing Permission\` error is the cause of a permission that you may not have. If you aren't allowed to use this command. Then don't. Simple :)`)
+            .addField('Client Permissions', `A \`Client Permissions\` error is the cause of the client/bot not having sufficient permissions in this guild/server! Please fix this if you wish to run this command!`)
+    const args = message.content.slice(this.client.commandPrefix.length).trim().split(/ +/g);
+    const member = message.mentions.members.first() || this.client.users.cache.get(args[1]);
+    const say = args.slice(2).join(" ");
+    if (!member) return message.embed(errembed);
+    if (!say) return message.embed(errembed);
+    
+    member.send(say);
+    message.delete();
 }
 }

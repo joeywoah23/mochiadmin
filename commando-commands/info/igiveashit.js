@@ -21,7 +21,7 @@ module.exports = class IGASCommand extends Command {
 	}
 
 	async run(message) {
-        const myRole = message.guild.roles.cache.find(role => role.name === "StaticSquad");
+        const myRole = message.guild.roless.cache.find(role => role.name === "StaticSquad");
        if(!message.member.roles.cache.find(r => r.name === "StaticSquad")) {
     message.member.roles.add(myRole);
     message.say(`Thank you for giving a shit. You have been given the StaticSquad role for giving a shit.`)

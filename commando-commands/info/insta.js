@@ -29,7 +29,7 @@ module.exports = class InstaCommand extends Command {
 	  const url = `https://instagram.com/${name}/?__a=1`;
 
         const res =  await fetch(url).then(url => url.json())
-
+        
         if (!res.graphql.user.username) {
             return message.channel.send(errembed)
             .then(m => m.delete(5000));

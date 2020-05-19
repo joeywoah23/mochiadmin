@@ -19,22 +19,13 @@ module.exports = class BanCommand extends Command {
       description: 'Bans the mentioned member.',
       clientPermissions: ['ADMINISTRATOR'],
 	    userPermissions: ['BAN_MEMBERS'],
-      args: [
-		{
-			key: 'member',
-            prompt: 'Who do you want to ban?',
-            type: "member",
-        },
-        {
-            key: 'Reason',
-            prompt: 'Why do you want to ban them?',
-            type: 'string'
-        },
-	],
 		});
 	}
 
-	async run(message, { member, Reason }) {
+	async run(message) {
+    const args = message.content.slice(this.client.commandPrefix.length).trim().split(/ +/g);
+    const Reason = args.slice(2).join(" ");
+    const member = message.mentions.members.first() || this.client.users.cache.get(args[0])
     const logsChannel = this.client.channels.cache.find(ch => ch.name === 'mochi-logs');
     if (!logsChannel) message.guild.channels.create('mochi-logs', { type: 'text' }).catch(console.error);
     await message.guild.members.ban(`${member}`, {reason: `${Reason}`})
